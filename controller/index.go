@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"sort"
 )
 
 func (c *Controller) Index(w http.ResponseWriter, r *http.Request) {
@@ -15,6 +16,7 @@ func (c *Controller) Index(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Error fetching keys", http.StatusInternalServerError)
 		return
 	}
+	sort.Strings(keys)
 
 	var flags []Flag
 	for _, key := range keys {
