@@ -5,7 +5,6 @@ import (
 	"html/template"
 	"log"
 	"net/http"
-	"path"
 )
 
 func (c *Controller) Index(w http.ResponseWriter, r *http.Request) {
@@ -34,8 +33,7 @@ func (c *Controller) Index(w http.ResponseWriter, r *http.Request) {
 		flags = append(flags, flag)
 	}
 
-	var filepath = path.Join("views", "index.html")
-	tmpl, err := template.ParseFiles(filepath)
+	tmpl, err := template.ParseFS(c.templateFS, "views/index.html")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

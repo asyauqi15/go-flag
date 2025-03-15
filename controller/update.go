@@ -5,7 +5,6 @@ import (
 	"github.com/go-chi/chi/v5"
 	"html/template"
 	"net/http"
-	"path"
 )
 
 func (c *Controller) Update(w http.ResponseWriter, r *http.Request) {
@@ -20,8 +19,7 @@ func (c *Controller) Update(w http.ResponseWriter, r *http.Request) {
 	var flag Flag
 	json.Unmarshal([]byte(val), &flag)
 
-	var filepath = path.Join("views", "update.html")
-	tmpl, err := template.ParseFiles(filepath)
+	tmpl, err := template.ParseFS(c.templateFS, "views/update.html")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

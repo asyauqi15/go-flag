@@ -4,12 +4,10 @@ import (
 	"encoding/json"
 	"html/template"
 	"net/http"
-	"path"
 )
 
 func (c *Controller) Add(w http.ResponseWriter, r *http.Request) {
-	var filepath = path.Join("views", "add.html")
-	var tmpl, err = template.ParseFiles(filepath)
+	var tmpl, err = template.ParseFS(c.templateFS, "views/add.html")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

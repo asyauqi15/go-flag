@@ -1,6 +1,9 @@
 package controller
 
-import "github.com/redis/go-redis/v9"
+import (
+	"embed"
+	"github.com/redis/go-redis/v9"
+)
 
 type Flag struct {
 	Name   string `json:"name"`
@@ -8,11 +11,13 @@ type Flag struct {
 }
 
 type Controller struct {
-	rdb *redis.Client
+	rdb        *redis.Client
+	templateFS embed.FS
 }
 
-func New(rdb *redis.Client) *Controller {
+func New(rdb *redis.Client, templateFS embed.FS) *Controller {
 	return &Controller{
-		rdb: rdb,
+		rdb:        rdb,
+		templateFS: templateFS,
 	}
 }
