@@ -18,11 +18,19 @@
                     Features
                 </div>
                 <ul class="list-group list-group-flush">
-                    {{range .}}
-                    <a href="/flag/feature/{{.Name}}" class="list-group-item list-group-item-action" aria-current="true">
-                        <p class="mb-1">{{.Name}}</p>
-                        <small class="text-{{if .Active}}success{{else}}danger{{end}}">{{if .Active}}Enabled{{else}}Disabled{{end}}</small>
-                    </a>
+                    {{if .}}
+                        {{range .}}
+                        <a href="/flag/feature/{{.Name}}" class="list-group-item list-group-item-action" aria-current="true">
+                            <p class="mb-1">{{.Name}}</p>
+                            <small class="text-{{if .Active}}success{{else}}danger{{end}}">
+                                {{if .Active}}Enabled{{else}}Disabled{{end}}
+                            </small>
+                        </a>
+                        {{end}}
+                    {{else}}
+                        <li class="list-group-item text-center text-muted">
+                            No features available. <a href="/flag/add">Add one now</a>.
+                        </li>
                     {{end}}
                 </ul>
             </div>

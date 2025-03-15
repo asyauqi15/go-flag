@@ -28,7 +28,7 @@
                 </div>
                 <div class="card-body">
                     {{if .Error}}
-                    <div class="alert alert-danger">{{.Error}}</div>
+                        <div class="alert alert-danger">{{.Error}}</div>
                     {{end}}
 
                     <form action="/flag/add" method="POST" class="needs-validation" novalidate onsubmit="return validateForm()">
