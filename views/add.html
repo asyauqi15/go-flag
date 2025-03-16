@@ -18,7 +18,7 @@
             }
         </script>
     </head>
-    <body>
+    <body class="bg-light">
         <div class="container mt-5">
             <h2 class="mb-4">Feature Flags</h2>
 
@@ -37,6 +37,13 @@
                             <input type="text" id="featureName" name="name" class="form-control" required>
                             <div class="invalid-feedback">Feature name must contain only letters, numbers, and underscores.</div>
                         </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Value</label>
+                            <textarea id="featureValue" name="value" class="form-control" rows="3" required></textarea>
+                            <div class="invalid-feedback">Feature value is required.</div>
+                        </div>
+
                         <div class="form-check form-switch mb-3">
                             <input class="form-check-input" type="checkbox" name="active">
                             <label class="form-check-label">Enable Feature</label>

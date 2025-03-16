@@ -14,6 +14,12 @@ import (
 	"time"
 )
 
+type Example struct {
+	Example1 string `json:"example_1"`
+	Example2 bool   `json:"example_2"`
+	Example3 int64  `json:"example_3"`
+}
+
 func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
@@ -30,7 +36,14 @@ func main() {
 	routes := chi.NewRouter()
 	routes.Get("/example/{feature_name}", func(w http.ResponseWriter, r *http.Request) {
 		name := chi.URLParam(r, "feature_name")
-		isActive, err := flagClient.IsActive(r.Context(), name)
+
+		isActive, err := flag.IsActive(r.Context(), flagClient, name)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		value, err := flag.GetStructValue[Example](r.Context(), flagClient, name)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -38,7 +51,8 @@ func main() {
 
 		resp := map[string]any{
 			"feature_name": name,
-			"is_active":    isActive,
+			"value":        value,
+			"active":       isActive,
 		}
 
 		respJson, err := json.Marshal(resp)

@@ -23,7 +23,8 @@ func (c *Controller) Add(w http.ResponseWriter, r *http.Request) {
 func (c *Controller) AddProcess(w http.ResponseWriter, r *http.Request) {
 	// Get form values
 	name := r.FormValue("name")
-	active := r.FormValue("active") == "on" // Checkbox sends "on" if checked
+	value := r.FormValue("value")
+	active := r.FormValue("active") == "on"
 
 	if name == "" {
 		http.Error(w, "Feature name is required", http.StatusBadRequest)
@@ -32,7 +33,7 @@ func (c *Controller) AddProcess(w http.ResponseWriter, r *http.Request) {
 
 	// Store in Redis
 	ctx := r.Context()
-	flag := model.Flag{Name: name, Active: active}
+	flag := model.Flag{Name: name, Value: value, Active: active}
 	flagJSON, _ := json.Marshal(flag)
 	err := c.rdb.Set(ctx, "flag:"+name, flagJSON, 0).Err()
 	if err != nil {

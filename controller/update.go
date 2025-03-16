@@ -38,9 +38,10 @@ func (c *Controller) Update(w http.ResponseWriter, r *http.Request) {
 
 func (c *Controller) UpdateProcess(w http.ResponseWriter, r *http.Request) {
 	name := chi.URLParam(r, "feature_name")
+	value := r.FormValue("value")
 	active := r.FormValue("active") == "on"
 
-	flag := model.Flag{Name: name, Active: active}
+	flag := model.Flag{Name: name, Value: value, Active: active}
 	flagJSON, _ := json.Marshal(flag)
 	err := c.rdb.Set(r.Context(), "flag:"+name, flagJSON, 0).Err()
 	if err != nil {
