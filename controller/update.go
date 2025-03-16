@@ -30,7 +30,10 @@ func (c *Controller) Update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = tmpl.Execute(w, flag)
+	err = tmpl.Execute(w, templateData{
+		RootPath: c.rootPath,
+		Data:     flag,
+	})
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
@@ -49,5 +52,5 @@ func (c *Controller) UpdateProcess(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	http.Redirect(w, r, "/flag", http.StatusSeeOther)
+	http.Redirect(w, r, c.rootPath, http.StatusSeeOther)
 }

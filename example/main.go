@@ -65,7 +65,7 @@ func main() {
 		w.Write(respJson)
 	})
 
-	flagClient.InitiateRoutes(routes)
+	flagClient.InitiateRoutes(routes, "/flagexample")
 
 	srv := &http.Server{
 		Addr:              "0.0.0.0:8000",

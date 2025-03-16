@@ -12,11 +12,12 @@ import (
 var templateFS embed.FS
 
 type Client struct {
-	rdb *redis.Client
+	rdb      *redis.Client
+	rootPath string
 }
 
-func (c *Client) InitiateRoutes(r *chi.Mux) {
-	cont := controller.New(c.rdb, templateFS)
+func (c *Client) InitiateRoutes(r *chi.Mux, path string) {
+	cont := controller.New(c.rdb, templateFS, path)
 
 	mux := chi.NewMux()
 	mux.Get("/", cont.Index)
@@ -26,7 +27,7 @@ func (c *Client) InitiateRoutes(r *chi.Mux) {
 	mux.Post("/feature/{feature_name}", cont.UpdateProcess)
 	mux.Post("/feature/{feature_name}/delete", cont.Delete)
 
-	r.Mount("/flag", mux)
+	r.Mount(path, mux)
 }
 
 func New(rdb *redis.Client) (*Client, error) {

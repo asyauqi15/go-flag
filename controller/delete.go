@@ -9,5 +9,5 @@ func (c *Controller) Delete(w http.ResponseWriter, r *http.Request) {
 	name := chi.URLParam(r, "feature_name")
 
 	c.rdb.Del(r.Context(), "flag:"+name)
-	http.Redirect(w, r, "/flag", http.StatusSeeOther)
+	http.Redirect(w, r, c.rootPath, http.StatusSeeOther)
 }

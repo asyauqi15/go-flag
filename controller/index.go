@@ -42,7 +42,10 @@ func (c *Controller) Index(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = tmpl.Execute(w, flags)
+	err = tmpl.Execute(w, templateData{
+		RootPath: c.rootPath,
+		Data:     flags,
+	})
 	if err != nil {
 		http.Error(w, "Error rendering template", http.StatusInternalServerError)
 	}
