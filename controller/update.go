@@ -2,6 +2,7 @@ package controller
 
 import (
 	"encoding/json"
+	"github.com/asyauqi15/go-flag/model"
 	"github.com/go-chi/chi/v5"
 	"html/template"
 	"net/http"
@@ -16,8 +17,12 @@ func (c *Controller) Update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var flag Flag
-	json.Unmarshal([]byte(val), &flag)
+	var flag model.Flag
+	err = json.Unmarshal([]byte(val), &flag)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 
 	tmpl, err := template.ParseFS(c.templateFS, "views/update.html")
 	if err != nil {
@@ -35,7 +40,7 @@ func (c *Controller) UpdateProcess(w http.ResponseWriter, r *http.Request) {
 	name := chi.URLParam(r, "feature_name")
 	active := r.FormValue("active") == "on"
 
-	flag := Flag{Name: name, Active: active}
+	flag := model.Flag{Name: name, Active: active}
 	flagJSON, _ := json.Marshal(flag)
 	err := c.rdb.Set(r.Context(), "flag:"+name, flagJSON, 0).Err()
 	if err != nil {

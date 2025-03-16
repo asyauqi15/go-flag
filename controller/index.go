@@ -2,6 +2,7 @@ package controller
 
 import (
 	"encoding/json"
+	"github.com/asyauqi15/go-flag/model"
 	"html/template"
 	"log"
 	"net/http"
@@ -18,7 +19,7 @@ func (c *Controller) Index(w http.ResponseWriter, r *http.Request) {
 	}
 	sort.Strings(keys)
 
-	var flags []Flag
+	var flags []model.Flag
 	for _, key := range keys {
 		data, err := c.rdb.Get(ctx, key).Result()
 		if err != nil {
@@ -26,7 +27,7 @@ func (c *Controller) Index(w http.ResponseWriter, r *http.Request) {
 			continue
 		}
 
-		var flag Flag
+		var flag model.Flag
 		if err := json.Unmarshal([]byte(data), &flag); err != nil {
 			log.Println("Error unmarshaling JSON", key, err)
 			continue

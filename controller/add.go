@@ -2,6 +2,7 @@ package controller
 
 import (
 	"encoding/json"
+	"github.com/asyauqi15/go-flag/model"
 	"html/template"
 	"net/http"
 )
@@ -31,7 +32,7 @@ func (c *Controller) AddProcess(w http.ResponseWriter, r *http.Request) {
 
 	// Store in Redis
 	ctx := r.Context()
-	flag := Flag{Name: name, Active: active}
+	flag := model.Flag{Name: name, Active: active}
 	flagJSON, _ := json.Marshal(flag)
 	err := c.rdb.Set(ctx, "flag:"+name, flagJSON, 0).Err()
 	if err != nil {

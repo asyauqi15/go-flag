@@ -5,11 +5,6 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
-type Flag struct {
-	Name   string `json:"name"`
-	Active bool   `json:"active"`
-}
-
 type Controller struct {
 	rdb        *redis.Client
 	templateFS embed.FS

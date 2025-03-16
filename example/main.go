@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"github.com/asyauqi15/go-flag"
 	"github.com/go-chi/chi/v5"
@@ -21,9 +22,34 @@ func main() {
 		Addr: "127.0.0.1:6379",
 	})
 
-	flagClient := flag.New(rdb)
+	flagClient, err := flag.New(rdb)
+	if err != nil {
+		log.Fatalf("failed to initiate flag client: %v", err)
+	}
 
 	routes := chi.NewRouter()
+	routes.Get("/example/{feature_name}", func(w http.ResponseWriter, r *http.Request) {
+		name := chi.URLParam(r, "feature_name")
+		isActive, err := flagClient.IsActive(r.Context(), name)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		resp := map[string]any{
+			"feature_name": name,
+			"is_active":    isActive,
+		}
+
+		respJson, err := json.Marshal(resp)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		w.WriteHeader(http.StatusOK)
+		w.Write(respJson)
+	})
 
 	flagClient.InitiateRoutes(routes)
 
