@@ -2,6 +2,7 @@ package controller
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/asyauqi15/go-flag/model"
 	"html/template"
 	"net/http"
@@ -41,7 +42,9 @@ func (c *Controller) AddProcess(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Check if the key already exists in Redis
-	exists, err := c.rdb.Exists(ctx, "flag:"+name).Result()
+	key := fmt.Sprintf("%s:%s", c.keyPrefix, name)
+
+	exists, err := c.rdb.Exists(ctx, key).Result()
 	if err != nil {
 		http.Error(w, "Error checking feature existence", http.StatusInternalServerError)
 		return
@@ -59,7 +62,7 @@ func (c *Controller) AddProcess(w http.ResponseWriter, r *http.Request) {
 	// Store in Redis
 	flag := model.Flag{Name: name, Value: value, Active: active}
 	flagJSON, _ := json.Marshal(flag)
-	err = c.rdb.Set(ctx, "flag:"+name, flagJSON, 0).Err()
+	err = c.rdb.Set(ctx, key, flagJSON, 0).Err()
 	if err != nil {
 		http.Error(w, "Error saving feature", http.StatusInternalServerError)
 		return

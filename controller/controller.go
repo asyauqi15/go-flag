@@ -7,6 +7,7 @@ import (
 
 type Controller struct {
 	rdb        *redis.Client
+	keyPrefix  string
 	templateFS embed.FS
 	rootPath   string
 }
@@ -17,9 +18,10 @@ type templateData struct {
 	ErrorMsg string
 }
 
-func New(rdb *redis.Client, templateFS embed.FS, rootPath string) *Controller {
+func New(rdb *redis.Client, keyPrefix string, templateFS embed.FS, rootPath string) *Controller {
 	return &Controller{
 		rdb:        rdb,
+		keyPrefix:  keyPrefix,
 		templateFS: templateFS,
 		rootPath:   rootPath,
 	}

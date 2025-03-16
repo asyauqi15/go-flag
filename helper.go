@@ -15,7 +15,9 @@ func IsActive(ctx context.Context, c *Client, name string) (bool, error) {
 		return false, errors.New("redis client is not initialized")
 	}
 
-	val, err := c.rdb.Get(ctx, "flag:"+name).Result()
+	key := fmt.Sprintf("%s:%s", c.keyPrefix, name)
+
+	val, err := c.rdb.Get(ctx, key).Result()
 	if errors.Is(err, redis.Nil) {
 		return false, nil
 	} else if err != nil {
@@ -36,7 +38,9 @@ func GetValue[T any](ctx context.Context, c *Client, name string) (value T, err 
 		return value, errors.New("redis client is not initialized")
 	}
 
-	v, err := c.rdb.Get(ctx, "flag:"+name).Result()
+	key := fmt.Sprintf("%s:%s", c.keyPrefix, name)
+
+	v, err := c.rdb.Get(ctx, key).Result()
 	if errors.Is(err, redis.Nil) {
 		return value, errors.New("feature not found")
 	} else if err != nil {
@@ -84,7 +88,9 @@ func GetStructValue[T any](ctx context.Context, c *Client, name string) (value T
 		return value, errors.New("redis client is not initialized")
 	}
 
-	v, err := c.rdb.Get(ctx, "flag:"+name).Result()
+	key := fmt.Sprintf("%s:%s", c.keyPrefix, name)
+
+	v, err := c.rdb.Get(ctx, key).Result()
 	if errors.Is(err, redis.Nil) {
 		return value, errors.New("feature not found")
 	} else if err != nil {

@@ -12,7 +12,7 @@ import (
 func (c *Controller) Index(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
-	keys, err := c.rdb.Keys(ctx, "flag:*").Result()
+	keys, err := c.rdb.Keys(ctx, c.keyPrefix+":*").Result()
 	if err != nil {
 		http.Error(w, "Error fetching keys", http.StatusInternalServerError)
 		return

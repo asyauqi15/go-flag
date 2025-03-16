@@ -2,6 +2,7 @@ package controller
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/asyauqi15/go-flag/model"
 	"github.com/go-chi/chi/v5"
 	"html/template"
@@ -11,7 +12,9 @@ import (
 func (c *Controller) Update(w http.ResponseWriter, r *http.Request) {
 	name := chi.URLParam(r, "feature_name")
 
-	val, err := c.rdb.Get(r.Context(), "flag:"+name).Result()
+	key := fmt.Sprintf("%s:%s", c.keyPrefix, name)
+
+	val, err := c.rdb.Get(r.Context(), key).Result()
 	if err != nil {
 		http.Error(w, "Feature not found", http.StatusNotFound)
 		return
@@ -46,7 +49,10 @@ func (c *Controller) UpdateProcess(w http.ResponseWriter, r *http.Request) {
 
 	flag := model.Flag{Name: name, Value: value, Active: active}
 	flagJSON, _ := json.Marshal(flag)
-	err := c.rdb.Set(r.Context(), "flag:"+name, flagJSON, 0).Err()
+
+	key := fmt.Sprintf("%s:%s", c.keyPrefix, name)
+
+	err := c.rdb.Set(r.Context(), key, flagJSON, 0).Err()
 	if err != nil {
 		http.Error(w, "Error updating feature", http.StatusInternalServerError)
 		return

@@ -28,7 +28,7 @@ func main() {
 		Addr: "127.0.0.1:6379",
 	})
 
-	flagClient, err := flag.New(rdb)
+	flagClient, err := flag.New(rdb, nil)
 	if err != nil {
 		log.Fatalf("failed to initiate flag client: %v", err)
 	}
